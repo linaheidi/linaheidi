@@ -1,986 +1,567 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Play,
-  Download,
-  Image as ImageIcon,
-  Youtube,
-  Search,
-  CheckCircle2,
-  Lock,
-  Unlock,
-  ExternalLink,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  Sparkles,
-  Info,
-  Radio,
-  RotateCcw,
-  Check,
-  Send
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Earning Bot & File Unlocker</title>
+  
+  <!-- Monetag Rewarded Popup SDK (Zone 11999946) -->
+  <script src="//libtl.com/sdk.js" data-zone="11999946" data-sdk="show_11999946"></script>
 
-// Declare global Monetag SDK functions
-declare global {
-  interface Window {
-    show_11999946?: (format?: string) => Promise<void>;
-    show_9837009?: any;
-    __miniApp?: any;
-  }
-}
-
-interface Banner {
-  id: string;
-  title: string;
-  desc: string;
-  yt: string;
-  img: string;
-}
-
-interface BotFile {
-  id: string;
-  title: string;
-  desc: string;
-  img: string;
-  requiredAds: number;
-  downloadUrl: string;
-  yt: string;
-}
-
-interface ProgressState {
-  count: number;
-  unlocked: boolean;
-}
-
-const DEFAULT_IMG =
-  'data:image/svg+xml;utf8,' +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' width='640' height='360'><rect width='100%' height='100%' fill='#e6ecff'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#6b6f85' font-size='22'>DEFAULT IMAGE</text></svg>`
-  );
-
-export default function App() {
-  // App data as provided in user request
-  const banners: Banner[] = [
-    {
-      id: 'b1',
-      title: 'EARNING APP',
-      desc: 'Watch ads to unlock files - Banner 1',
-      yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0',
-      img: 'https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png',
-    },
-    {
-      id: 'b2',
-      title: 'TELEGRAM MINI APP',
-      desc: 'Create mini apps easily',
-      yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0',
-      img: 'https://trickbd.com/wp-content/uploads/2025/09/06/20250906_223855.jpg',
-    },
-    {
-      id: 'b3',
-      title: 'NO CODING REQUIRED',
-      desc: 'Monetag + Telegram',
-      yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0',
-      img: 'https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png',
-    },
-  ];
-
-  const files: BotFile[] = [
-    {
-      id: 'file1',
-      title: 'Telegram Earning Bot',
-      desc: 'Download the files. Watch 10 Ads to Unlock',
-      img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_161319.jpg',
-      requiredAds: 10,
-      downloadUrl: 'https://t.me/trickmimicrojob/19',
-      yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0',
-    },
-    {
-      id: 'file2',
-      title: 'Telegram mini Earning Bot Code With Admin Panel',
-      desc: 'Download the files. Watch 20 Ads to Unlock',
-      img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_170245.jpg',
-      requiredAds: 20,
-      downloadUrl: 'https://t.me/trickmimicrojob/19',
-      yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0',
-    },
-    {
-      id: 'file3',
-      title: 'Earning Bot Source Code With Admin Panel',
-      desc: '(File) Watch Ads to Unlock',
-      img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_171832.jpg',
-      requiredAds: 15,
-      downloadUrl: 'https://t.me/trickmimicrojob/19',
-      yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0',
-    },
-  ];
-
-  // States
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [progressMap, setProgressMap] = useState<Record<string, ProgressState>>({});
-  const [sdkAvailable, setSdkAvailable] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' | 'warn' } | null>(null);
-
-  // Modals state
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [youtubeUrl, setYoutubeUrl] = useState<string | null>(null);
-
-  // Simulated ad modal state (used when testing or when Monetag SDK is blocked by browser ad blocker)
-  const [simulatedAd, setSimulatedAd] = useState<{
-    fileId: string;
-    fileTitle: string;
-    timeLeft: number;
-    reasonMessage: string;
-  } | null>(null);
-
-  // Helper to load progress from localStorage
-  const getProgressKey = (id: string) => 'unlock_progress_' + id;
-
-  const loadProgress = (id: string): ProgressState => {
-    try {
-      const raw = localStorage.getItem(getProgressKey(id));
-      if (!raw) return { count: 0, unlocked: false };
-      return JSON.parse(raw);
-    } catch {
-      return { count: 0, unlocked: false };
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card-bg: #ffffff;
+      --primary: #4f46e5;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
     }
-  };
 
-  const saveProgress = (id: string, state: ProgressState) => {
-    try {
-      localStorage.setItem(getProgressKey(id), JSON.stringify(state));
-    } catch (e) {
-      console.error('Failed to save to localStorage', e);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
-    setProgressMap((prev) => ({ ...prev, [id]: state }));
-    window.dispatchEvent(new CustomEvent('progressUpdated', { detail: { id, state } }));
-  };
 
-  // Toast notification helper
-  const showToast = (text: string, type: 'success' | 'info' | 'warn' = 'info') => {
-    setToastMessage({ text, type });
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 4000);
-  };
-
-  // Increment ad count and unlock if threshold is reached
-  const incrementAdCount = (fileId: string, increment = 1, reason = 'manual') => {
-    const file = files.find((f) => f.id === fileId);
-    if (!file) return;
-
-    const current = loadProgress(fileId);
-    const newCount = (current.count || 0) + increment;
-    const isNowUnlocked = newCount >= file.requiredAds;
-
-    const updatedState: ProgressState = {
-      count: isNowUnlocked ? file.requiredAds : newCount,
-      unlocked: isNowUnlocked || current.unlocked,
-    };
-
-    saveProgress(fileId, updatedState);
-
-    if (isNowUnlocked && !current.unlocked) {
-      showToast(`🎉 অভিনন্দন! "${file.title}" ফাইলটি আনলক হয়েছে! এখন ডাউনলোড করতে পারেন।`, 'success');
-    } else {
-      showToast(`+${increment} বিজ্ঞাপন সফলভাবে যোগ হয়েছে (${updatedState.count}/${file.requiredAds}) [${reason}]`, 'info');
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 60px;
     }
-  };
 
-  // Initial load
-  useEffect(() => {
-    const initialMap: Record<string, ProgressState> = {};
-    files.forEach((file) => {
-      initialMap[file.id] = loadProgress(file.id);
-    });
-    setProgressMap(initialMap);
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 16px;
+    }
 
-    // Check Monetag SDK availability
-    const checkSdk = () => {
-      if (typeof window.show_11999946 === 'function') {
-        setSdkAvailable(true);
-      } else {
-        setSdkAvailable(false);
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-sdk {
+      background: #e0e7ff;
+      color: #3730a3;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #c7d2fe;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: white;
+      font-size: 0.88rem;
+      outline: none;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Carousel */
+    .carousel {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      background: linear-gradient(135deg, #ffffff 60%, #eef2ff 100%);
+    }
+
+    .carousel img {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .carousel-info {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .carousel-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: #e0e7ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .carousel-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .carousel-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    /* Cards Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 500px) {
+      .grid {
+        grid-template-columns: 1fr;
       }
-    };
-
-    checkSdk();
-    const interval = setInterval(checkSdk, 1500);
-
-    // Carousel auto-play
-    const slideTimer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % banners.length);
-    }, 4500);
-
-    // Global listener for cross-window / event sync
-    const handleProgressUpdate = (e: any) => {
-      if (e.detail?.id && e.detail?.state) {
-        setProgressMap((prev) => ({ ...prev, [e.detail.id]: e.detail.state }));
-      }
-    };
-    window.addEventListener('progressUpdated', handleProgressUpdate);
-
-    // Expose debug / legacy API for window console testing
-    window.__miniApp = {
-      data: { banners, files },
-      loadProgress,
-      saveProgress,
-      incrementAdCount,
-      showRewardedPopup: () => {
-        if (typeof window.show_11999946 === 'function') {
-          return window.show_11999946('pop');
-        }
-        return Promise.reject(new Error('SDK not loaded'));
-      },
-    };
-
-    return () => {
-      clearInterval(interval);
-      clearInterval(slideTimer);
-      window.removeEventListener('progressUpdated', handleProgressUpdate);
-    };
-  }, []);
-
-  // Timer countdown for simulated ad modal
-  useEffect(() => {
-    if (!simulatedAd || simulatedAd.timeLeft <= 0) return;
-
-    const timer = setInterval(() => {
-      setSimulatedAd((prev) => {
-        if (!prev) return null;
-        if (prev.timeLeft <= 1) {
-          return { ...prev, timeLeft: 0 };
-        }
-        return { ...prev, timeLeft: prev.timeLeft - 1 };
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [simulatedAd?.timeLeft]);
-
-  // Handle Rewarded Popup Trigger (The exact new integration requested by the user!)
-  const handleWatchRewardedAd = (fileId: string) => {
-    const file = files.find((f) => f.id === fileId);
-    if (!file) return;
-
-    // Check if the new Monetag SDK function show_11999946 is ready
-    if (typeof window.show_11999946 === 'function') {
-      showToast('বিজ্ঞাপন লোড হচ্ছে (Rewarded Popup)... অনুগ্রহ করে অপেক্ষা করুন।', 'info');
-
-      // USER'S EXACT CODE INTEGRATION:
-      // show_11999946('pop').then(() => { ... }).catch(e => { ... })
-      window.show_11999946('pop')
-        .then(() => {
-          // User watched ad till the end or closed it in interstitial format
-          // Your code to reward user for rewarded format:
-          incrementAdCount(fileId, 1, 'Rewarded Pop 11999946');
-        })
-        .catch((e: any) => {
-          // User got error during playing ad
-          console.warn('Ad playback error or closed before reward:', e);
-          // If ad failed (e.g. adblocker, network, or format unfulfilled), allow simulated fallback so user is not stuck:
-          setSimulatedAd({
-            fileId,
-            fileTitle: file.title,
-            timeLeft: 12,
-            reasonMessage: 'বিজ্ঞাপন প্রদশনে সমস্যা হয়েছে বা ব্রাউজারে অ্যাড ব্লকার সক্রিয়। বিকল্প ডেমো সিস্টেমে প্রগ্রেস সম্পন্ন করুন:',
-          });
-        });
-    } else if (typeof window.show_9837009 === 'function') {
-      // Legacy fallback
-      showToast('পূর্ববর্তী বিজ্ঞাপন জোন লোড হচ্ছে...', 'info');
-      try {
-        const res = window.show_9837009((event: any) => {
-          incrementAdCount(fileId, 1, 'SDK Legacy');
-        });
-        if (res && typeof res.then === 'function') {
-          res
-            .then(() => incrementAdCount(fileId, 1, 'SDK Legacy Promise'))
-            .catch(() => {
-              setSimulatedAd({
-                fileId,
-                fileTitle: file.title,
-                timeLeft: 10,
-                reasonMessage: 'বিজ্ঞাপন বন্ধ হয়েছে। ডেমো ভিউ সম্পন্ন করুন:',
-              });
-            });
-        }
-      } catch {
-        setSimulatedAd({
-          fileId,
-          fileTitle: file.title,
-          timeLeft: 12,
-          reasonMessage: 'অ্যাড নেটওয়ার্ক লোড হচ্ছে। নিচের ডেমো টাইমার শেষে আনলক করুন:',
-        });
-      }
-    } else {
-      // SDK not loaded yet or blocked by user's AdBlock extension
-      setSimulatedAd({
-        fileId,
-        fileTitle: file.title,
-        timeLeft: 12,
-        reasonMessage: 'Monetag SDK (Zone: 11999946) লোড করা সম্ভব হয়নি (সম্ভবত অ্যাড-ব্লকার সক্রিয়)। টেস্টিং ও ডাউনলোডের জন্য নিচের ডেমো বিজ্ঞাপন টাইমার ব্যবহার করুন:',
-      });
     }
-  };
 
-  // YouTube modal helper
-  const openYouTubeModal = (url: string) => {
-    setYoutubeUrl(url);
-  };
-
-  // Format YouTube Embed URL
-  const getEmbedUrl = (ytUrl: string) => {
-    try {
-      const parsed = new URL(ytUrl);
-      if (parsed.hostname.includes('youtube.com') || parsed.hostname.includes('youtu.be')) {
-        const v = parsed.searchParams.get('v');
-        if (v) return `https://www.youtube.com/embed/${v}`;
-        if (parsed.pathname.includes('/embed/')) return ytUrl;
-      }
-    } catch {
-      // fallback
+    .card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    return null;
-  };
 
-  // Filtered files based on search
-  const filteredFiles = files.filter((f) => {
-    if (!searchTerm.trim()) return true;
-    const term = searchTerm.toLowerCase();
-    return f.title.toLowerCase().includes(term) || f.desc.toLowerCase().includes(term);
-  });
-
-  // Reset all progress (testing helper)
-  const resetAllProgress = () => {
-    if (confirm('আপনি কি সমস্ত প্রগ্রেস রিসেট করতে চান?')) {
-      files.forEach((f) => {
-        localStorage.removeItem(getProgressKey(f.id));
-      });
-      const resetMap: Record<string, ProgressState> = {};
-      files.forEach((f) => {
-        resetMap[f.id] = { count: 0, unlocked: false };
-      });
-      setProgressMap(resetMap);
-      showToast('সব প্রগ্রেস রিসেট করা হয়েছে।', 'info');
+    .card-top {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 14px;
     }
-  };
 
-  return (
-    <div className="min-h-screen bg-[#f5f7fb] text-slate-800 pb-16 font-sans">
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-4 right-4 z-50 max-w-sm animate-fade-in transition-all">
-          <div
-            className={`flex items-start gap-3 p-4 rounded-xl shadow-xl border text-sm backdrop-blur-md ${
-              toastMessage.type === 'success'
-                ? 'bg-emerald-500/95 text-white border-emerald-400'
-                : toastMessage.type === 'warn'
-                ? 'bg-amber-500/95 text-white border-amber-400'
-                : 'bg-indigo-600/95 text-white border-indigo-400'
-            }`}
-          >
-            {toastMessage.type === 'success' ? (
-              <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
-            ) : (
-              <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
-            )}
-            <div className="flex-1 font-medium">{toastMessage.text}</div>
-            <button
-              onClick={() => setToastMessage(null)}
-              className="text-white/80 hover:text-white transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
+    .thumb-wrap {
+      width: 90px;
+      height: 75px;
+      flex-shrink: 0;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
 
-      {/* Main Container */}
-      <div className="max-w-4xl mx-auto px-4 pt-4 sm:pt-6">
-        {/* Header */}
-        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5 pb-2">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-1.5">
-                Welcome <span className="animate-pulse">🥰</span>
-              </h1>
-              {sdkAvailable ? (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-                  Monetag SDK Ready (Zone 11999946)
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
-                  <Radio className="w-3 h-3 text-indigo-500" />
-                  Zone: 11999946
-                </span>
-              )}
-            </div>
-            <p className="text-xs sm:text-sm text-slate-500">
-              বিজ্ঞাপন দেখুন, প্রগ্রেস পূরণ করুন এবং ডাউনলোড আনলক করুন
-            </p>
-          </div>
+    .thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-          {/* Search Box */}
-          <div className="w-full sm:w-72 relative">
-            <input
-              id="searchInput"
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="ফাইলের জন্য অনুসন্ধান করুন..."
-              className="w-full pl-10 pr-4 py-2.5 text-sm rounded-full bg-white border border-slate-200/90 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all placeholder:text-slate-400"
-            />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-        </header>
+    .card-details {
+      flex: 1;
+      min-width: 0;
+    }
 
-        {/* Carousel / Banner Section */}
-        <div className="relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-100 mb-6 group">
-          <div
-            className="flex transition-transform duration-500 ease-out"
-            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-          >
-            {banners.map((banner, index) => (
-              <div
-                key={banner.id}
-                className="min-w-full p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-gradient-to-r from-white via-indigo-50/30 to-purple-50/20"
-              >
-                <div
-                  onClick={() => setPreviewImage(banner.img || DEFAULT_IMG)}
-                  className="relative cursor-pointer group/img flex-shrink-0 overflow-hidden rounded-xl border border-slate-200/80 shadow-sm"
-                >
-                  <img
-                    src={banner.img || DEFAULT_IMG}
-                    alt={banner.title}
-                    className="w-28 sm:w-36 h-20 sm:h-24 object-cover transform transition-transform duration-300 group-hover/img:scale-105"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = DEFAULT_IMG;
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
-                    বড় করে দেখুন
-                  </div>
-                </div>
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 3px;
+    }
 
-                <div className="flex-1 text-center sm:text-left space-y-1.5">
-                  <div className="inline-block px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100/80 rounded-md">
-                    Featured
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-800 leading-snug">
-                    {banner.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-500">{banner.desc}</p>
-                  <div className="flex items-center justify-center sm:justify-start gap-2.5 pt-2">
-                    <button
-                      onClick={() => openYouTubeModal(banner.yt)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-[#6b8cff] to-[#b44bff] shadow-sm hover:opacity-95 active:scale-95 transition-all"
-                    >
-                      <Youtube className="w-3.5 h-3.5 text-red-100" />
-                      Watch Video
-                    </button>
-                    <button
-                      onClick={() => setPreviewImage(banner.img || DEFAULT_IMG)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 active:scale-95 transition-all"
-                    >
-                      <ImageIcon className="w-3.5 h-3.5 text-slate-500" />
-                      Preview
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+    .card-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
 
-          {/* Dots */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 bg-black/10 backdrop-blur-xs px-2.5 py-1 rounded-full">
-            {banners.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentSlide(idx)}
-                className={`transition-all rounded-full ${
-                  currentSlide === idx
-                    ? 'w-5 h-2 bg-indigo-600'
-                    : 'w-2 h-2 bg-slate-300 hover:bg-slate-400'
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
-          </div>
+    .progress-bar-bg {
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
 
-          {/* Slide Arrow controls */}
-          <button
-            onClick={() =>
-              setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length)
-            }
-            className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white shadow flex items-center justify-center text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setCurrentSlide((prev) => (prev + 1) % banners.length)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white shadow flex items-center justify-center text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--gradient);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
 
-        {/* Section Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
-              উপলব্ধ ফাইল
-            </h2>
-            <span className="px-2 py-0.5 text-xs font-semibold bg-indigo-100 text-indigo-700 rounded-full">
-              {filteredFiles.length} টি আইটেম
-            </span>
-          </div>
+    .progress-bar-fill.unlocked {
+      background: var(--success);
+    }
 
-          <button
-            onClick={resetAllProgress}
-            className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 transition-colors"
-            title="প্রগ্রেস রিসেট করুন"
-          >
-            <RotateCcw className="w-3 h-3" />
-            রিসেট
-          </button>
-        </div>
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 12px;
+    }
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-          {filteredFiles.length === 0 ? (
-            <div className="col-span-full py-12 text-center bg-white rounded-2xl border border-dashed border-slate-300">
-              <Search className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-              <p className="text-slate-500 font-medium text-sm">কোন ফাইল পাওয়া যায়নি</p>
-              <button
-                onClick={() => setSearchTerm('')}
-                className="mt-3 text-xs text-indigo-600 font-semibold underline hover:text-indigo-800"
-              >
-                সব ফাইল দেখুন
-              </button>
-            </div>
-          ) : (
-            filteredFiles.map((file) => {
-              const state = progressMap[file.id] || { count: 0, unlocked: false };
-              const isUnlocked = !!state.unlocked;
-              const count = state.count || 0;
-              const percent = Math.min(
-                100,
-                file.requiredAds > 0 ? Math.round((count / file.requiredAds) * 100) : 100
-              );
+    .btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
 
-              return (
-                <div
-                  key={file.id}
-                  className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-200 flex flex-col justify-between group"
-                >
-                  <div className="flex gap-3.5 items-start">
-                    {/* Thumbnail Image */}
-                    <div
-                      onClick={() => setPreviewImage(file.img || DEFAULT_IMG)}
-                      className="relative cursor-pointer flex-shrink-0 w-24 sm:w-28 h-20 sm:h-22 rounded-xl overflow-hidden border border-slate-200/90 shadow-2xs group/img bg-slate-50"
-                    >
-                      <img
-                        src={file.img || DEFAULT_IMG}
-                        alt={file.title}
-                        className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = DEFAULT_IMG;
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-black/25 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                        <ImageIcon className="w-5 h-5 text-white" />
-                      </div>
-                      {isUnlocked && (
-                        <div className="absolute top-1 right-1 bg-emerald-500 text-white rounded-full p-0.5 shadow">
-                          <Check className="w-3 h-3 stroke-[3]" />
-                        </div>
-                      )}
-                    </div>
+    .btn-ad {
+      background: var(--gradient);
+      color: white;
+    }
 
-                    {/* Meta info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <h3 className="font-bold text-sm sm:text-base text-slate-800 truncate leading-snug">
-                          {file.title}
-                        </h3>
-                      </div>
-                      <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                        {file.desc}
-                      </p>
+    .btn-ad.unlocked {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      cursor: default;
+    }
 
-                      {/* Progress Bar */}
-                      <div className="mt-3">
-                        <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                          <span className="flex items-center gap-1 font-medium">
-                            {isUnlocked ? (
-                              <span className="text-emerald-600 flex items-center gap-0.5">
-                                <Unlock className="w-3 h-3" /> আনলক সম্পন্ন
-                              </span>
-                            ) : (
-                              <span className="text-slate-500 flex items-center gap-0.5">
-                                <Lock className="w-3 h-3" /> লকড
-                              </span>
-                            )}
-                          </span>
-                          <span className="font-semibold text-slate-700">
-                            {count}/{file.requiredAds}
-                          </span>
-                        </div>
-                        <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50">
-                          <div
-                            className={`h-full rounded-full transition-all duration-500 ${
-                              isUnlocked
-                                ? 'bg-emerald-500'
-                                : 'bg-gradient-to-r from-[#6b8cff] to-[#b44bff]'
-                            }`}
-                            style={{ width: `${percent}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+    .btn-secondary {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
 
-                  {/* Buttons Row */}
-                  <div className="flex items-center flex-wrap gap-2 pt-4 mt-3 border-t border-slate-100">
-                    {/* Watch Rewarded Ad / Unlock Button */}
-                    <button
-                      onClick={() => handleWatchRewardedAd(file.id)}
-                      disabled={isUnlocked}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-xs transition-all active:scale-95 ${
-                        isUnlocked
-                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 cursor-default'
-                          : 'text-white bg-gradient-to-r from-[#6b8cff] to-[#b44bff] hover:opacity-95 hover:shadow-indigo-500/25'
-                      }`}
-                    >
-                      {isUnlocked ? (
-                        <>
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                          আনলকড
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-3.5 h-3.5 animate-spin" />
-                          বিজ্ঞাপন দেখুন (+১)
-                        </>
-                      )}
-                    </button>
+    .btn-download {
+      margin-left: auto;
+      background: var(--success);
+      color: white;
+    }
 
-                    {/* Image Preview */}
-                    <button
-                      onClick={() => setPreviewImage(file.img || DEFAULT_IMG)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 active:scale-95 transition-all"
-                    >
-                      <ImageIcon className="w-3.5 h-3.5 text-slate-500" />
-                      ইমেজ
-                    </button>
+    .btn-download.disabled {
+      background: #e2e8f0;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
 
-                    {/* YouTube Video */}
-                    <button
-                      onClick={() => openYouTubeModal(file.yt)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 active:scale-95 transition-all"
-                    >
-                      <Youtube className="w-3.5 h-3.5 text-red-500" />
-                      ভিডিও
-                    </button>
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(2px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
 
-                    {/* Download Button (Enabled only when unlocked) */}
-                    <a
-                      href={isUnlocked ? file.downloadUrl : undefined}
-                      target={isUnlocked ? '_blank' : undefined}
-                      rel="noopener noreferrer"
-                      onClick={(e) => {
-                        if (!isUnlocked) {
-                          e.preventDefault();
-                          showToast(
-                            `ডাউনলোড করতে আরও ${file.requiredAds - count} টি বিজ্ঞাপন দেখতে হবে।`,
-                            'warn'
-                          );
-                        }
-                      }}
-                      className={`inline-flex items-center gap-1.5 ml-auto px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 ${
-                        isUnlocked
-                          ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm shadow-emerald-500/30'
-                          : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
-                      }`}
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      Download
-                    </a>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
+    .modal-box {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+    }
 
-        {/* Telegram Direct Support Box */}
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white rounded-2xl p-5 mb-8 shadow-lg shadow-indigo-500/15 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="space-y-1 text-center sm:text-left">
-            <h3 className="font-bold text-base flex items-center justify-center sm:justify-start gap-2">
-              <Send className="w-4 h-4" /> টেলিগ্রাম চ্যানেলে যোগ দিন
-            </h3>
-            <p className="text-xs text-white/80">
-              নতুন নতুন টেলিগ্রাম বট স্ক্রিপ্ট এবং আপডেট সবার আগে পেতে আমাদের টেলিগ্রাম গ্রুপে থাকুন।
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <a
-              href="https://t.me/trickmimicrojob"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white text-indigo-700 font-bold text-xs hover:bg-slate-100 shadow active:scale-95 transition-all"
-            >
-              টেলিগ্রাম চ্যানেল <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="/standalone.html"
-              download="telegram_mini_bot.html"
-              className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-semibold text-xs border border-white/30 shadow active:scale-95 transition-all"
-              title="একত্রিত একক HTML ফাইল ডাউনলোড করুন"
-            >
-              <Download className="w-3.5 h-3.5" /> HTML ফাইল ডাউনলোড
-            </a>
-          </div>
-        </div>
+    .toast {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #1e293b;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: none;
+    }
 
-        {/* Footer */}
-        <footer className="text-center text-xs text-slate-400 py-6 border-t border-slate-200/60 space-y-2">
-          <p className="font-semibold text-slate-600">Developed by Mahabub</p>
-          <p className="text-[12px] text-slate-500">
-            Monetag Rewarded Popup Integration (Zone ID: <span className="font-mono font-bold text-indigo-600">11999946</span>)
-          </p>
-          <div className="flex items-center justify-center flex-wrap gap-2 pt-1">
-            <a
-              href="/standalone.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-300 text-xs transition-colors shadow-2xs"
-            >
-              <ExternalLink className="w-3 h-3" /> একক HTML ফাইল ওপেন করুন
-            </a>
-            <a
-              href="/standalone.html"
-              download="telegram_mini_bot.html"
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-300 text-xs transition-colors shadow-2xs"
-            >
-              <Download className="w-3 h-3" /> HTML ডাউনলোড করুন
-            </a>
-          </div>
-        </footer>
+    .telegram-banner {
+      background: var(--gradient);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="container">
+    <header>
+      <div>
+        <h1>Welcome 🥰 <span class="badge-sdk">Zone: 11999946</span></h1>
+        <p style="font-size: 0.8rem; color: var(--muted);">বিজ্ঞাপন দেখুন, প্রগ্রেস পূরণ করুন এবং ফাইল ডাউনলোড করুন</p>
       </div>
+      <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="ফাইল খুঁজুন..." oninput="handleSearch()">
+      </div>
+    </header>
 
-      {/* Image Preview Modal */}
-      {previewImage && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in"
-          onClick={() => setPreviewImage(null)}
-        >
-          <div
-            className="relative max-w-3xl w-full bg-white rounded-2xl p-3 shadow-2xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-2 px-2 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                <ImageIcon className="w-3.5 h-3.5 text-indigo-500" />
-                ইমেজ প্রিভিউ
-              </span>
-              <button
-                onClick={() => setPreviewImage(null)}
-                className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="p-2 flex items-center justify-center max-h-[80vh] overflow-auto">
-              <img
-                src={previewImage}
-                alt="Preview"
-                className="max-h-[75vh] w-auto rounded-xl object-contain shadow-sm"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = DEFAULT_IMG;
-                }}
-              />
-            </div>
-            <div className="text-right pt-2 px-2">
-              <button
-                onClick={() => setPreviewImage(null)}
-                className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
-              >
-                বন্ধ করুন
-              </button>
-            </div>
-          </div>
+    <!-- Carousel Banner -->
+    <div class="carousel">
+      <img src="https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png" alt="Earning Bot Banner" id="carouselImg" onclick="showImage(this.src)">
+      <div class="carousel-info">
+        <span class="carousel-tag">Monetag + Telegram</span>
+        <div class="carousel-title" id="carouselTitle">EARNING APP SOURCE CODE</div>
+        <div class="carousel-desc" id="carouselDesc">Watch ads to unlock files. Direct telegram download link included.</div>
+        <div>
+          <a href="https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0" target="_blank" class="btn btn-ad">
+            ▶️ Watch Video
+          </a>
+          <button class="btn btn-secondary" onclick="showImage('https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png')">
+            🖼️ Preview
+          </button>
         </div>
-      )}
+      </div>
+    </div>
 
-      {/* YouTube Modal */}
-      {youtubeUrl && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in"
-          onClick={() => setYoutubeUrl(null)}
-        >
-          <div
-            className="relative max-w-2xl w-full bg-slate-900 text-white rounded-2xl p-4 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Youtube className="w-4 h-4 text-red-500" />
-                ভিডিও টিউটোরিয়াল
-              </span>
-              <button
-                onClick={() => setYoutubeUrl(null)}
-                className="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
+    <!-- Files Grid -->
+    <div class="grid" id="filesGrid"></div>
+
+    <!-- Telegram Channel Link -->
+    <div class="telegram-banner">
+      <div>
+        <strong>টেলিগ্রাম চ্যানেলে জয়েন করুন</strong>
+        <p style="font-size: 0.75rem; opacity: 0.9;">নতুন নতুন সব বট কোড ও আপডেট সবার আগে পেতে যোগ দিন।</p>
+      </div>
+      <a href="https://t.me/trickmimicrojob" target="_blank" class="btn" style="background: white; color: #4f46e5; font-weight: 700;">
+        ✈️ Join Channel
+      </a>
+    </div>
+
+    <footer style="text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 24px;">
+      Developed by linaheidi • Monetag Rewarded Popup Zone: <strong>11999946</strong>
+    </footer>
+  </div>
+
+  <!-- Image Modal -->
+  <div class="modal-backdrop" id="imgModal" onclick="closeModal()">
+    <div class="modal-box" onclick="event.stopPropagation()" style="text-align: center;">
+      <img id="modalImg" src="" style="max-width: 100%; max-height: 70vh; border-radius: 8px;">
+      <div style="margin-top: 12px; text-align: right;">
+        <button class="btn btn-secondary" onclick="closeModal()">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const files = [
+      {
+        id: 'file1',
+        title: 'Telegram Earning Bot',
+        desc: 'Download the files. Watch 10 Ads to Unlock',
+        img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_161319.jpg',
+        requiredAds: 10,
+        downloadUrl: 'https://t.me/trickmimicrojob/19',
+        yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0'
+      },
+      {
+        id: 'file2',
+        title: 'Telegram mini Earning Bot Code With Admin Panel',
+        desc: 'Download the files. Watch 20 Ads to Unlock',
+        img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_170245.jpg',
+        requiredAds: 20,
+        downloadUrl: 'https://t.me/trickmimicrojob/19',
+        yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0'
+      },
+      {
+        id: 'file3',
+        title: 'Earning Bot Source Code With Admin Panel',
+        desc: '(File) Watch Ads to Unlock',
+        img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_171832.jpg',
+        requiredAds: 15,
+        downloadUrl: 'https://t.me/trickmimicrojob/19',
+        yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0'
+      }
+    ];
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    function getProgress(id) {
+      try {
+        const raw = localStorage.getItem('unlock_progress_' + id);
+        return raw ? JSON.parse(raw) : { count: 0, unlocked: false };
+      } catch (e) {
+        return { count: 0, unlocked: false };
+      }
+    }
+
+    function saveProgress(id, count, unlocked) {
+      localStorage.setItem('unlock_progress_' + id, JSON.stringify({ count, unlocked }));
+      renderFiles();
+    }
+
+    // THE USER'S MONETAG REWARDED POPUP CALL
+    function watchRewardedAd(fileId) {
+      const file = files.find(f => f.id === fileId);
+      if (!file) return;
+
+      if (typeof window.show_11999946 === 'function') {
+        showToast('বিজ্ঞাপন লোড হচ্ছে...');
+        // Execute Monetag show_11999946('pop')
+        window.show_11999946('pop').then(() => {
+          // user watch ad till the end or close it in interstitial format
+          // your code to reward user for rewarded format:
+          addReward(fileId);
+        }).catch(e => {
+          // user get error during playing ad
+          console.warn('Monetag error or ad closed early', e);
+          // Fallback simulation so user is not stuck:
+          setTimeout(() => addReward(fileId), 3000);
+          showToast('বিজ্ঞাপন দেখতে কিছুটা সময় লাগছে, ৩ সেকেন্ড অপেক্ষা করুন...');
+        });
+      } else {
+        // Fallback simulation when adblocker prevents Monetag from loading
+        showToast('Monetag SDK লোড হতে সময় নিচ্ছে, ৩ সেকেন্ডে রিওয়ার্ড যোগ হচ্ছে...');
+        setTimeout(() => addReward(fileId), 3000);
+      }
+    }
+
+    function addReward(fileId) {
+      const file = files.find(f => f.id === fileId);
+      const cur = getProgress(fileId);
+      const newCount = cur.count + 1;
+      const unlocked = newCount >= file.requiredAds;
+      saveProgress(fileId, newCount, unlocked);
+
+      if (unlocked && !cur.unlocked) {
+        showToast('🎉 অভিনন্দন! ' + file.title + ' আনলক হয়েছে!');
+      } else {
+        showToast('+১ টি বিজ্ঞাপন সম্পন্ন (' + newCount + '/' + file.requiredAds + ')');
+      }
+    }
+
+    function renderFiles(filterText = '') {
+      const grid = document.getElementById('filesGrid');
+      grid.innerHTML = '';
+
+      const filtered = files.filter(f => 
+        f.title.toLowerCase().includes(filterText.toLowerCase()) || 
+        f.desc.toLowerCase().includes(filterText.toLowerCase())
+      );
+
+      filtered.forEach(file => {
+        const prog = getProgress(file.id);
+        const isUnlocked = prog.unlocked;
+        const count = prog.count;
+        const pct = Math.min(100, Math.round((count / file.requiredAds) * 100));
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="thumb-wrap" onclick="showImage('${file.img}')">
+              <img src="${file.img}" alt="${file.title}">
             </div>
-
-            <div className="py-3">
-              {getEmbedUrl(youtubeUrl) ? (
-                <div className="relative pt-[56.25%] rounded-xl overflow-hidden bg-black shadow-inner">
-                  <iframe
-                    src={getEmbedUrl(youtubeUrl)!}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    className="absolute inset-0 w-full h-full border-0"
-                  />
-                </div>
-              ) : (
-                <div className="p-6 text-center space-y-3 bg-slate-800/60 rounded-xl">
-                  <Youtube className="w-12 h-12 text-red-500 mx-auto" />
-                  <p className="text-sm text-slate-300">
-                    ইউটিউব চ্যানেলে ভিডিওটি দেখতে নিচে ক্লিক করুন:
-                  </p>
-                  <a
-                    href={youtubeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow"
-                  >
-                    YouTube-এ ওপেন করুন <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-xs">
-              <a
-                href={youtubeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
-              >
-                সরাসরি দেখতে যান <ExternalLink className="w-3 h-3" />
-              </a>
-              <button
-                onClick={() => setYoutubeUrl(null)}
-                className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Simulated / Fallback Ad Playing Modal */}
-      {simulatedAd && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="relative max-w-md w-full bg-white rounded-2xl p-6 shadow-2xl text-center space-y-4">
-            <div className="w-12 h-12 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto text-indigo-600">
-              <Sparkles className="w-6 h-6 animate-pulse" />
-            </div>
-
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                বিজ্ঞাপন চলছে (Rewarded Ad)
-              </h3>
-              <p className="text-xs text-slate-500 mt-1">{simulatedAd.fileTitle}</p>
-              <div className="mt-2 text-xs p-2.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200/70 text-left">
-                {simulatedAd.reasonMessage}
+            <div class="card-details">
+              <div class="card-title">${file.title}</div>
+              <div class="card-desc">${file.desc}</div>
+              <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted);">
+                <span>${isUnlocked ? '🔓 আনলক সম্পন্ন' : '🔒 লকড'}</span>
+                <strong>${count}/${file.requiredAds}</strong>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill ${isUnlocked ? 'unlocked' : ''}" style="width: ${pct}%;"></div>
               </div>
             </div>
-
-            <div className="py-2">
-              {simulatedAd.timeLeft > 0 ? (
-                <div className="space-y-2">
-                  <div className="text-2xl font-black text-indigo-600 font-mono tracking-tight">
-                    {simulatedAd.timeLeft}s
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    বিজ্ঞাপন শেষ হওয়া পর্যন্ত অনুগ্রহ করে অপেক্ষা করুন...
-                  </p>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div
-                      className="bg-indigo-600 h-full transition-all duration-1000 ease-linear"
-                      style={{ width: `${((12 - simulatedAd.timeLeft) / 12) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  বিজ্ঞাপন দেখা শেষ হয়েছে!
-                </div>
-              )}
-            </div>
-
-            <div className="flex gap-2 justify-center pt-2">
-              <button
-                onClick={() => setSimulatedAd(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
-              >
-                বাতিল করুন
-              </button>
-
-              <button
-                onClick={() => {
-                  const id = simulatedAd.fileId;
-                  setSimulatedAd(null);
-                  incrementAdCount(id, 1, 'Demo Completed');
-                }}
-                disabled={simulatedAd.timeLeft > 0}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  simulatedAd.timeLeft > 0
-                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                    : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 active:scale-95'
-                }`}
-              >
-                {simulatedAd.timeLeft > 0 ? `অপেক্ষা করুন (${simulatedAd.timeLeft}s)` : 'কাউন্ট যুক্ত করুন (+১)'}
-              </button>
-
-              {/* Dev bypass helper so developer can instantly test reward without waiting */}
-              {simulatedAd.timeLeft > 0 && (
-                <button
-                  onClick={() => {
-                    const id = simulatedAd.fileId;
-                    setSimulatedAd(null);
-                    incrementAdCount(id, 1, 'Quick Test');
-                  }}
-                  className="px-3 py-2 rounded-xl text-[11px] font-medium text-indigo-600 hover:bg-indigo-50 border border-indigo-200 transition-colors"
-                  title="টেস্টিংয়ের জন্য অবিলম্বে ১টি বিজ্ঞাপন যুক্ত করুন"
-                >
-                  সরাসরি যুক্ত করুন
-                </button>
-              )}
-            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
-}
+          <div class="card-actions">
+            ${isUnlocked ? `
+              <button class="btn btn-ad unlocked">✅ আনলকড</button>
+            ` : `
+              <button class="btn btn-ad" onclick="watchRewardedAd('${file.id}')">✨ বিজ্ঞাপন দেখুন (+১)</button>
+            `}
+            <button class="btn btn-secondary" onclick="showImage('${file.img}')">ইমেজ</button>
+            <a href="${file.yt}" target="_blank" class="btn btn-secondary">ভিডিও</a>
+            ${isUnlocked ? `
+              <a href="${file.downloadUrl}" target="_blank" class="btn btn-download">⬇️ Download</a>
+            ` : `
+              <button class="btn btn-download disabled" onclick="showToast('ডাউনলোড করতে আরও ${file.requiredAds - count} টি বিজ্ঞাপন দেখতে হবে')">⬇️ Download</button>
+            `}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function handleSearch() {
+      const term = document.getElementById('searchInput').value;
+      renderFiles(term);
+    }
+
+    function showImage(src) {
+      document.getElementById('modalImg').src = src;
+      document.getElementById('imgModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('imgModal').style.display = 'none';
+    }
+
+    // Initial render
+    renderFiles();
+  </script>
+</body>
+</html>
