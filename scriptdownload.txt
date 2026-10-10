@@ -387,7 +387,7 @@
     </div>
 
     <footer style="text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 24px;">
-      Developed by linaheidi • Monetag Rewarded Popup Zone: <strong>11999946</strong>
+      Developed by Mahabub • Monetag Rewarded Popup Zone: <strong>11999946</strong>
     </footer>
   </div>
 
