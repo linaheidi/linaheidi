@@ -1,567 +1,1096 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Telegram Earning Bot & File Unlocker</title>
-  
-  <!-- Monetag Rewarded Popup SDK (Zone 11999946) -->
-  <script src="//libtl.com/sdk.js" data-zone="11999946" data-sdk="show_11999946"></script>
+<!-- ============================================================
+  BLOGGER POST / PAGE HTML CODE (100% READY)
+  Where to paste:
+  1. Blogger Admin -> Posts (or Pages) -> New Post
+  2. Switch top-left icon from [Compose view] to [<> HTML view]
+  3. Paste this entire code into the editor and click Publish!
+============================================================ -->
 
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --card-bg: #ffffff;
-      --primary: #4f46e5;
-      --text: #1e293b;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --success: #10b981;
-      --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+<!-- Monetag Rewarded Popup SDK (Zone 11999946) -->
+<script src="//libtl.com/sdk.js" data-zone="11999946" data-sdk="show_11999946"></script>
+
+<style>
+#bot-unlocker-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    background: #f8fafc;
+    padding: 16px;
+    border-radius: 20px;
+    max-width: 960px;
+    margin: 16px auto;
+    box-sizing: border-box;
+    line-height: 1.5;
+    width: 100%;
+    overflow: hidden;
+  }
+  #bot-unlocker-container * {
+    box-sizing: border-box;
+  }
+
+  /* Header */
+  .buc-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  .buc-title-area {
+    min-width: 0;
+  }
+  .buc-title-area h2 {
+    margin: 0 0 4px 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .buc-title-area p {
+    margin: 0;
+    font-size: 13px;
+    color: #64748b;
+  }
+  .buc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    background: #e0e7ff;
+    color: #4338ca;
+  }
+
+  /* Search Box */
+  .buc-search-box {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+  }
+  .buc-search-input {
+    width: 100%;
+    padding: 10px 16px 10px 38px;
+    font-size: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9999px;
+    outline: none;
+    background: #ffffff;
+    color: #1e293b;
+    transition: all 0.2s ease;
+  }
+  .buc-search-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+  .buc-search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    fill: #94a3b8;
+  }
+
+  /* Banner Carousel */
+  .buc-carousel {
+    position: relative;
+    background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    width: 100%;
+  }
+  .buc-carousel-inner {
+    display: flex;
+    transition: transform 0.4s ease-in-out;
+    width: 100%;
+  }
+  .buc-slide {
+    min-width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  @media (min-width: 600px) {
+    .buc-slide {
+      flex-direction: row;
+      gap: 20px;
+      text-align: left;
     }
+  }
+  .buc-slide-img-wrap {
+    flex-shrink: 0;
+    width: 150px;
+    height: 95px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    background: #f1f5f9;
+  }
+  .buc-slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .buc-slide-img-wrap:hover .buc-slide-img {
+    transform: scale(1.05);
+  }
+  .buc-slide-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .buc-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #4f46e5;
+    background: #e0e7ff;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+  }
+  .buc-slide-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    color: #0f172a;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .buc-slide-desc {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 12px 0;
+    word-break: break-word;
+  }
+  .buc-slide-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .buc-btn-gradient {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    border: none;
+    cursor: pointer;
+    text-decoration: none !important;
+    transition: opacity 0.2s;
+  }
+  .buc-btn-gradient:hover {
+    opacity: 0.92;
+  }
+  .buc-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .buc-btn-secondary:hover {
+    background: #f8fafc;
+  }
+  .buc-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding-bottom: 12px;
+  }
+  .buc-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .buc-dot.active {
+    width: 22px;
+    background: #6366f1;
+  }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  /* Section Head */
+  .buc-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    width: 100%;
+  }
+  .buc-section-head h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .buc-count-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: #e2e8f0;
+    color: #334155;
+    padding: 3px 8px;
+    border-radius: 9999px;
+  }
+  .buc-reset-btn {
+    font-size: 12px;
+    color: #94a3b8;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .buc-reset-btn:hover {
+    color: #ef4444;
+  }
+
+  /* Files Grid - Constrained to prevent overflow */
+  .buc-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  @media (min-width: 768px) {
+    .buc-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+  }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      padding-bottom: 60px;
-    }
+  /* Card */
+  .buc-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s, transform 0.2s;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .buc-card:hover {
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+  .buc-card-top {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .buc-card-thumb {
+    width: 85px;
+    height: 75px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+  }
+  .buc-card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .buc-unlocked-tick {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: #10b981;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+  }
+  .buc-card-meta {
+    flex: 1 1 0%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .buc-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 4px 0;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .buc-card-desc {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0 0 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .buc-progress-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .buc-progress-bar-bg {
+    width: 100%;
+    height: 7px;
+    background: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  .buc-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #a855f7);
+    border-radius: 9999px;
+    transition: width 0.4s ease;
+  }
+  .buc-progress-bar-fill.unlocked {
+    background: #10b981;
+  }
 
-    .container {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 16px;
-    }
+  /* Card Actions */
+  .buc-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .buc-watch-btn {
+    padding: 6px 11px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    color: #ffffff;
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .buc-watch-btn.done {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+    cursor: default;
+  }
+  .buc-action-sm {
+    padding: 6px 9px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  .buc-action-sm:hover {
+    background: #f1f5f9;
+  }
+  .buc-dl-btn {
+    margin-left: auto;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .buc-dl-btn.ready {
+    background: #10b981;
+    color: #ffffff !important;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.25);
+  }
+  .buc-dl-btn.locked {
+    background: #f1f5f9;
+    color: #94a3b8 !important;
+    border: 1px solid #e2e8f0;
+    cursor: not-allowed;
+  }
 
-    header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
+  /* Telegram Promo */
+  .buc-tg-promo {
+    background: linear-gradient(135deg, #2563eb, #6366f1, #9333ea);
+    border-radius: 16px;
+    padding: 16px 20px;
+    color: #ffffff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .buc-tg-promo h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  .buc-tg-promo p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.9;
+    color: #ffffff;
+  }
+  .buc-tg-link {
+    background: #ffffff;
+    color: #4f46e5 !important;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
 
-    h1 {
-      font-size: 1.4rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+  /* Modals */
+  .buc-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .buc-modal-overlay.active {
+    display: flex;
+  }
+  .buc-modal-box {
+    background: #ffffff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+  }
+  .buc-modal-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: #0f172a;
+  }
+  .buc-modal-close {
+    background: #f1f5f9;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .buc-modal-body {
+    padding: 16px;
+    text-align: center;
+  }
 
-    .badge-sdk {
-      background: #e0e7ff;
-      color: #3730a3;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid #c7d2fe;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
+  /* Toast Notification */
+  .buc-toast {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    z-index: 1000000;
+    display: none;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+  .buc-toast.show {
+    display: block;
+  }
+  .buc-toast.success {
+    background: #10b981;
+  }
+  .buc-toast.info {
+    background: #4f46e5;
+  }
+  .buc-toast.warn {
+    background: #f59e0b;
+  }
+</style>
 
-    .search-box {
-      width: 100%;
-      max-width: 280px;
-    }
+<div id="bot-unlocker-container">
+  <!-- Toast Notification -->
+  <div id="buc-toast" class="buc-toast info"></div>
 
-    .search-input {
-      width: 100%;
-      padding: 8px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: white;
-      font-size: 0.88rem;
-      outline: none;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-    .search-input:focus {
-      border-color: var(--primary);
-    }
+  <!-- Header -->
+  <div class="buc-header">
+    <div class="buc-title-area">
+      <h2>Welcome &#129303; <span class="buc-badge">Zone 11999946</span></h2>
+      <p>Watch ads, complete progress, and unlock instant downloads</p>
+    </div>
+    <div class="buc-search-box">
+      <input type="text" id="buc-search-input" class="buc-search-input" placeholder="Search files..." />
+    </div>
+  </div>
 
-    /* Carousel */
-    .carousel {
-      background: white;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      padding: 18px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: center;
-      background: linear-gradient(135deg, #ffffff 60%, #eef2ff 100%);
-    }
-
-    .carousel img {
-      width: 120px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-    }
-
-    .carousel-info {
-      flex: 1;
-      min-width: 240px;
-    }
-
-    .carousel-tag {
-      font-size: 0.65rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      color: var(--primary);
-      background: #e0e7ff;
-      padding: 2px 6px;
-      border-radius: 4px;
-      display: inline-block;
-      margin-bottom: 4px;
-    }
-
-    .carousel-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-
-    .carousel-desc {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    /* Cards Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    @media (max-width: 500px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: white;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      padding: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .card-top {
-      display: flex;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .thumb-wrap {
-      width: 90px;
-      height: 75px;
-      flex-shrink: 0;
-      position: relative;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      cursor: pointer;
-    }
-
-    .thumb-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .card-details {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 3px;
-    }
-
-    .card-desc {
-      font-size: 0.75rem;
-      color: var(--muted);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      margin-bottom: 8px;
-    }
-
-    .progress-bar-bg {
-      height: 8px;
-      background: #f1f5f9;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 4px;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: var(--gradient);
-      border-radius: 999px;
-      transition: width 0.4s ease;
-    }
-
-    .progress-bar-fill.unlocked {
-      background: var(--success);
-    }
-
-    .card-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      border-top: 1px solid #f1f5f9;
-      padding-top: 12px;
-    }
-
-    .btn {
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s ease;
-    }
-    .btn:active {
-      transform: scale(0.96);
-    }
-
-    .btn-ad {
-      background: var(--gradient);
-      color: white;
-    }
-
-    .btn-ad.unlocked {
-      background: #ecfdf5;
-      color: #065f46;
-      border: 1px solid #a7f3d0;
-      cursor: default;
-    }
-
-    .btn-secondary {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-
-    .btn-download {
-      margin-left: auto;
-      background: var(--success);
-      color: white;
-    }
-
-    .btn-download.disabled {
-      background: #e2e8f0;
-      color: #94a3b8;
-      cursor: not-allowed;
-    }
-
-    /* Modal */
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(2px);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-box {
-      background: white;
-      border-radius: 16px;
-      padding: 16px;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
-    }
-
-    .toast {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: #1e293b;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
-      z-index: 1000;
-      display: none;
-    }
-
-    .telegram-banner {
-      background: var(--gradient);
-      color: white;
-      padding: 16px 20px;
-      border-radius: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="toast" id="toast"></div>
-
-  <div class="container">
-    <header>
-      <div>
-        <h1>Welcome 🥰 <span class="badge-sdk">Zone: 11999946</span></h1>
-        <p style="font-size: 0.8rem; color: var(--muted);">বিজ্ঞাপন দেখুন, প্রগ্রেস পূরণ করুন এবং ফাইল ডাউনলোড করুন</p>
-      </div>
-      <div class="search-box">
-        <input type="text" id="searchInput" class="search-input" placeholder="ফাইল খুঁজুন..." oninput="handleSearch()">
-      </div>
-    </header>
-
-    <!-- Carousel Banner -->
-    <div class="carousel">
-      <img src="https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png" alt="Earning Bot Banner" id="carouselImg" onclick="showImage(this.src)">
-      <div class="carousel-info">
-        <span class="carousel-tag">Monetag + Telegram</span>
-        <div class="carousel-title" id="carouselTitle">EARNING APP SOURCE CODE</div>
-        <div class="carousel-desc" id="carouselDesc">Watch ads to unlock files. Direct telegram download link included.</div>
-        <div>
-          <a href="https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0" target="_blank" class="btn btn-ad">
-            ▶️ Watch Video
-          </a>
-          <button class="btn btn-secondary" onclick="showImage('https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png')">
-            🖼️ Preview
-          </button>
+  <!-- Banner Carousel -->
+  <div class="buc-carousel">
+    <div class="buc-carousel-inner" id="buc-carousel-inner">
+      <!-- Pre-rendered slides so it is immediately visible -->
+      <div class="buc-slide">
+        <div class="buc-slide-img-wrap" onclick="openImgModal('https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png')">
+          <img src="https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png" class="buc-slide-img" alt="TELEGRAM EARNING APP" />
+        </div>
+        <div class="buc-slide-content">
+          <span class="buc-tag">Featured</span>
+          <h4 class="buc-slide-title">TELEGRAM EARNING APP</h4>
+          <p class="buc-slide-desc">Watch ads to unlock files - Banner 1</p>
+          <div class="buc-slide-btns">
+            <a href="https://uplcm.com/4/12001378" target="_blank" rel="noopener noreferrer" class="buc-btn-gradient">&#9654; Watch Now</a>
+            <button class="buc-btn-secondary" type="button" onclick="openImgModal('https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png')">Preview</button>
+          </div>
         </div>
       </div>
     </div>
+    <div class="buc-dots" id="buc-dots">
+      <div class="buc-dot active" onclick="goToSlide(0)"></div>
+      <div class="buc-dot" onclick="goToSlide(1)"></div>
+      <div class="buc-dot" onclick="goToSlide(2)"></div>
+    </div>
+  </div>
 
-    <!-- Files Grid -->
-    <div class="grid" id="filesGrid"></div>
+  <!-- Section Head -->
+  <div class="buc-section-head">
+    <h3>Available Files <span class="buc-count-badge" id="buc-item-count">3 items</span></h3>
+    <button class="buc-reset-btn" id="buc-reset-btn" type="button">&#8635; Reset Progress</button>
+  </div>
 
-    <!-- Telegram Channel Link -->
-    <div class="telegram-banner">
+  <!-- Files Grid (Pre-rendered for instant display) -->
+  <div class="buc-grid" id="buc-grid">
+    <!-- Card 1 -->
+    <div class="buc-card" id="card-file1">
       <div>
-        <strong>টেলিগ্রাম চ্যানেলে জয়েন করুন</strong>
-        <p style="font-size: 0.75rem; opacity: 0.9;">নতুন নতুন সব বট কোড ও আপডেট সবার আগে পেতে যোগ দিন।</p>
-      </div>
-      <a href="https://t.me/trickmimicrojob" target="_blank" class="btn" style="background: white; color: #4f46e5; font-weight: 700;">
-        ✈️ Join Channel
-      </a>
-    </div>
-
-    <footer style="text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 24px;">
-      Developed by Mahabub • Monetag Rewarded Popup Zone: <strong>11999946</strong>
-    </footer>
-  </div>
-
-  <!-- Image Modal -->
-  <div class="modal-backdrop" id="imgModal" onclick="closeModal()">
-    <div class="modal-box" onclick="event.stopPropagation()" style="text-align: center;">
-      <img id="modalImg" src="" style="max-width: 100%; max-height: 70vh; border-radius: 8px;">
-      <div style="margin-top: 12px; text-align: right;">
-        <button class="btn btn-secondary" onclick="closeModal()">বন্ধ করুন</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const files = [
-      {
-        id: 'file1',
-        title: 'Telegram Earning Bot',
-        desc: 'Download the files. Watch 10 Ads to Unlock',
-        img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_161319.jpg',
-        requiredAds: 10,
-        downloadUrl: 'https://t.me/trickmimicrojob/19',
-        yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0'
-      },
-      {
-        id: 'file2',
-        title: 'Telegram mini Earning Bot Code With Admin Panel',
-        desc: 'Download the files. Watch 20 Ads to Unlock',
-        img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_170245.jpg',
-        requiredAds: 20,
-        downloadUrl: 'https://t.me/trickmimicrojob/19',
-        yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0'
-      },
-      {
-        id: 'file3',
-        title: 'Earning Bot Source Code With Admin Panel',
-        desc: '(File) Watch Ads to Unlock',
-        img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_171832.jpg',
-        requiredAds: 15,
-        downloadUrl: 'https://t.me/trickmimicrojob/19',
-        yt: 'https://youtube.com/@the-eduverse?si=mmhmqaUxv_odGWp0'
-      }
-    ];
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 3500);
-    }
-
-    function getProgress(id) {
-      try {
-        const raw = localStorage.getItem('unlock_progress_' + id);
-        return raw ? JSON.parse(raw) : { count: 0, unlocked: false };
-      } catch (e) {
-        return { count: 0, unlocked: false };
-      }
-    }
-
-    function saveProgress(id, count, unlocked) {
-      localStorage.setItem('unlock_progress_' + id, JSON.stringify({ count, unlocked }));
-      renderFiles();
-    }
-
-    // THE USER'S MONETAG REWARDED POPUP CALL
-    function watchRewardedAd(fileId) {
-      const file = files.find(f => f.id === fileId);
-      if (!file) return;
-
-      if (typeof window.show_11999946 === 'function') {
-        showToast('বিজ্ঞাপন লোড হচ্ছে...');
-        // Execute Monetag show_11999946('pop')
-        window.show_11999946('pop').then(() => {
-          // user watch ad till the end or close it in interstitial format
-          // your code to reward user for rewarded format:
-          addReward(fileId);
-        }).catch(e => {
-          // user get error during playing ad
-          console.warn('Monetag error or ad closed early', e);
-          // Fallback simulation so user is not stuck:
-          setTimeout(() => addReward(fileId), 3000);
-          showToast('বিজ্ঞাপন দেখতে কিছুটা সময় লাগছে, ৩ সেকেন্ড অপেক্ষা করুন...');
-        });
-      } else {
-        // Fallback simulation when adblocker prevents Monetag from loading
-        showToast('Monetag SDK লোড হতে সময় নিচ্ছে, ৩ সেকেন্ডে রিওয়ার্ড যোগ হচ্ছে...');
-        setTimeout(() => addReward(fileId), 3000);
-      }
-    }
-
-    function addReward(fileId) {
-      const file = files.find(f => f.id === fileId);
-      const cur = getProgress(fileId);
-      const newCount = cur.count + 1;
-      const unlocked = newCount >= file.requiredAds;
-      saveProgress(fileId, newCount, unlocked);
-
-      if (unlocked && !cur.unlocked) {
-        showToast('🎉 অভিনন্দন! ' + file.title + ' আনলক হয়েছে!');
-      } else {
-        showToast('+১ টি বিজ্ঞাপন সম্পন্ন (' + newCount + '/' + file.requiredAds + ')');
-      }
-    }
-
-    function renderFiles(filterText = '') {
-      const grid = document.getElementById('filesGrid');
-      grid.innerHTML = '';
-
-      const filtered = files.filter(f => 
-        f.title.toLowerCase().includes(filterText.toLowerCase()) || 
-        f.desc.toLowerCase().includes(filterText.toLowerCase())
-      );
-
-      filtered.forEach(file => {
-        const prog = getProgress(file.id);
-        const isUnlocked = prog.unlocked;
-        const count = prog.count;
-        const pct = Math.min(100, Math.round((count / file.requiredAds) * 100));
-
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-top">
-            <div class="thumb-wrap" onclick="showImage('${file.img}')">
-              <img src="${file.img}" alt="${file.title}">
+        <div class="buc-card-top">
+          <div class="buc-card-thumb" onclick="openImgModal('https://trickbd.com/wp-content/uploads/2025/09/07/20250907_161319.jpg')">
+            <img src="https://trickbd.com/wp-content/uploads/2025/09/07/20250907_161319.jpg" onerror="this.src='https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png'" alt="Telegram Earning Bot" />
+          </div>
+          <div class="buc-card-meta">
+            <h4 class="buc-card-title">Telegram Earning Bot</h4>
+            <p class="buc-card-desc">Download source files. Watch 10 Ads to Unlock</p>
+            <div class="buc-progress-head">
+              <span id="pstatus-file1">Locked</span>
+              <span id="pcount-file1">0 / 10</span>
             </div>
-            <div class="card-details">
-              <div class="card-title">${file.title}</div>
-              <div class="card-desc">${file.desc}</div>
-              <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted);">
-                <span>${isUnlocked ? '🔓 আনলক সম্পন্ন' : '🔒 লকড'}</span>
-                <strong>${count}/${file.requiredAds}</strong>
-              </div>
-              <div class="progress-bar-bg">
-                <div class="progress-bar-fill ${isUnlocked ? 'unlocked' : ''}" style="width: ${pct}%;"></div>
-              </div>
+            <div class="buc-progress-bar-bg">
+              <div class="buc-progress-bar-fill" id="pbar-file1" style="width:0%"></div>
             </div>
           </div>
-          <div class="card-actions">
-            ${isUnlocked ? `
-              <button class="btn btn-ad unlocked">✅ আনলকড</button>
-            ` : `
-              <button class="btn btn-ad" onclick="watchRewardedAd('${file.id}')">✨ বিজ্ঞাপন দেখুন (+১)</button>
-            `}
-            <button class="btn btn-secondary" onclick="showImage('${file.img}')">ইমেজ</button>
-            <a href="${file.yt}" target="_blank" class="btn btn-secondary">ভিডিও</a>
-            ${isUnlocked ? `
-              <a href="${file.downloadUrl}" target="_blank" class="btn btn-download">⬇️ Download</a>
-            ` : `
-              <button class="btn btn-download disabled" onclick="showToast('ডাউনলোড করতে আরও ${file.requiredAds - count} টি বিজ্ঞাপন দেখতে হবে')">⬇️ Download</button>
-            `}
+        </div>
+      </div>
+      <div class="buc-card-actions">
+        <button class="buc-watch-btn" id="btn-watch-file1" type="button" onclick="handleWatchAd('file1')">&#10024; Watch Ad (+1)</button>
+        <button class="buc-action-sm" type="button" onclick="openImgModal('https://trickbd.com/wp-content/uploads/2025/09/07/20250907_161319.jpg')">Image</button>
+        <a href="https://uplcm.com/4/12001378" target="_blank" rel="noopener noreferrer" class="buc-action-sm">&#9654; Watch Now</a>
+        <a href="https://t.me/trickmimicrojob/19" id="btn-dl-file1" class="buc-dl-btn locked" onclick="handleDownloadClick(event, 'file1')">&#11015; Download</a>
+      </div>
+    </div>
+
+    <!-- Card 2 (Telegram Mini Earning Bot Code With Admin Panel - fully constrained) -->
+    <div class="buc-card" id="card-file2">
+      <div>
+        <div class="buc-card-top">
+          <div class="buc-card-thumb" onclick="openImgModal('https://trickbd.com/wp-content/uploads/2025/09/07/20250907_170245.jpg')">
+            <img src="https://trickbd.com/wp-content/uploads/2025/09/07/20250907_170245.jpg" onerror="this.src='https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png'" alt="Telegram Mini Earning Bot Code With Admin Panel" />
           </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
+          <div class="buc-card-meta">
+            <h4 class="buc-card-title">Telegram Mini Earning Bot Code With Admin Panel</h4>
+            <p class="buc-card-desc">Download source files. Watch 20 Ads to Unlock</p>
+            <div class="buc-progress-head">
+              <span id="pstatus-file2">Locked</span>
+              <span id="pcount-file2">0 / 20</span>
+            </div>
+            <div class="buc-progress-bar-bg">
+              <div class="buc-progress-bar-fill" id="pbar-file2" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="buc-card-actions">
+        <button class="buc-watch-btn" id="btn-watch-file2" type="button" onclick="handleWatchAd('file2')">&#10024; Watch Ad (+1)</button>
+        <button class="buc-action-sm" type="button" onclick="openImgModal('https://trickbd.com/wp-content/uploads/2025/09/07/20250907_170245.jpg')">Image</button>
+        <a href="https://uplcm.com/4/12001378" target="_blank" rel="noopener noreferrer" class="buc-action-sm">&#9654; Watch Now</a>
+        <a href="https://t.me/trickmimicrojob/19" id="btn-dl-file2" class="buc-dl-btn locked" onclick="handleDownloadClick(event, 'file2')">&#11015; Download</a>
+      </div>
+    </div>
 
-    function handleSearch() {
-      const term = document.getElementById('searchInput').value;
-      renderFiles(term);
-    }
+    <!-- Card 3 -->
+    <div class="buc-card" id="card-file3">
+      <div>
+        <div class="buc-card-top">
+          <div class="buc-card-thumb" onclick="openImgModal('https://trickbd.com/wp-content/uploads/2025/09/07/20250907_171832.jpg')">
+            <img src="https://trickbd.com/wp-content/uploads/2025/09/07/20250907_171832.jpg" onerror="this.src='https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png'" alt="Earning Bot Source Code With Admin Panel" />
+          </div>
+          <div class="buc-card-meta">
+            <h4 class="buc-card-title">Earning Bot Source Code With Admin Panel</h4>
+            <p class="buc-card-desc">Complete zip archive. Watch 15 Ads to Unlock</p>
+            <div class="buc-progress-head">
+              <span id="pstatus-file3">Locked</span>
+              <span id="pcount-file3">0 / 15</span>
+            </div>
+            <div class="buc-progress-bar-bg">
+              <div class="buc-progress-bar-fill" id="pbar-file3" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="buc-card-actions">
+        <button class="buc-watch-btn" id="btn-watch-file3" type="button" onclick="handleWatchAd('file3')">&#10024; Watch Ad (+1)</button>
+        <button class="buc-action-sm" type="button" onclick="openImgModal('https://trickbd.com/wp-content/uploads/2025/09/07/20250907_171832.jpg')">Image</button>
+        <a href="https://uplcm.com/4/12001378" target="_blank" rel="noopener noreferrer" class="buc-action-sm">&#9654; Watch Now</a>
+        <a href="https://t.me/trickmimicrojob/19" id="btn-dl-file3" class="buc-dl-btn locked" onclick="handleDownloadClick(event, 'file3')">&#11015; Download</a>
+      </div>
+    </div>
+  </div>
 
-    function showImage(src) {
-      document.getElementById('modalImg').src = src;
-      document.getElementById('imgModal').style.display = 'flex';
-    }
+  <!-- Telegram Promo -->
+  <div class="buc-tg-promo">
+    <div>
+      <h4>Join Telegram Channel</h4>
+      <p>Get the newest Telegram bot scripts, admin panels, and updates first.</p>
+    </div>
+    <a href="https://t.me/globaldatingprtner98745" target="_blank" rel="noopener noreferrer" class="buc-tg-link">Join Telegram &#8594;</a>
+  </div>
+</div>
 
-    function closeModal() {
-      document.getElementById('imgModal').style.display = 'none';
-    }
+<!-- Image Modal -->
+<div id="buc-img-modal" class="buc-modal-overlay">
+  <div class="buc-modal-box">
+    <div class="buc-modal-head">
+      <span>Image Preview</span>
+      <button class="buc-modal-close" type="button" onclick="closeImgModal()">&#10005;</button>
+    </div>
+    <div class="buc-modal-body">
+      <img id="buc-modal-img" src="" alt="Preview" style="max-width:100%; max-height:70vh; border-radius:10px; object-fit:contain;" />
+    </div>
+  </div>
+</div>
 
-    // Initial render
+<!-- Fallback Countdown Modal -->
+<div id="buc-ad-modal" class="buc-modal-overlay">
+  <div class="buc-modal-box" style="padding:24px; text-align:center;">
+    <div style="font-size:32px; margin-bottom:8px;">&#10024;</div>
+    <h3 style="margin:0 0 6px 0; font-size:17px; color:#0f172a;">Watching Ad (Rewarded Popup)</h3>
+    <p id="buc-ad-filename" style="margin:0 0 12px 0; font-size:13px; color:#64748b; font-weight:600;"></p>
+    <div style="font-size:30px; font-weight:800; color:#6366f1; margin:14px 0;" id="buc-timer-sec">10s</div>
+    <p style="font-size:12px; color:#94a3b8; margin:0 0 16px 0;">Please wait until the ad playback finishes...</p>
+    <div style="display:flex; justify-content:center; gap:8px;">
+      <button onclick="closeAdModal()" type="button" class="buc-btn-secondary">Cancel</button>
+      <button id="buc-claim-reward-btn" type="button" class="buc-btn-gradient" style="opacity:0.5; cursor:not-allowed;" disabled="disabled" onclick="claimFallbackReward()">Claim Reward (+1)</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var BANNERS_DATA = [
+    { id: 'b1', title: 'TELEGRAM EARNING APP', desc: 'Watch ads to unlock files - Banner 1', yt: 'https://uplcm.com/4/12001378', img: 'https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png' },
+    { id: 'b2', title: 'TELEGRAM MINI APP', desc: 'Create mini apps easily without code', yt: 'https://uplcm.com/4/12001378', img: 'https://trickbd.com/wp-content/uploads/2025/09/06/20250906_223855.jpg' },
+    { id: 'b3', title: 'NO CODING REQUIRED', desc: 'Monetag and Telegram earning integration', yt: 'https://uplcm.com/4/12001378', img: 'https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png' }
+  ];
+
+  var FILES_DATA = [
+    { id: 'file1', title: 'Telegram Earning Bot', desc: 'Download source files. Watch 10 Ads to Unlock', img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_161319.jpg', requiredAds: 10, downloadUrl: 'https://t.me/trickmimicrojob/19' },
+    { id: 'file2', title: 'Telegram Mini Earning Bot Code With Admin Panel', desc: 'Download source files. Watch 20 Ads to Unlock', img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_170245.jpg', requiredAds: 20, downloadUrl: 'https://t.me/trickmimicrojob/19' },
+    { id: 'file3', title: 'Earning Bot Source Code With Admin Panel', desc: 'Complete zip archive. Watch 15 Ads to Unlock', img: 'https://trickbd.com/wp-content/uploads/2025/09/07/20250907_171832.jpg', requiredAds: 15, downloadUrl: 'https://t.me/trickmimicrojob/19' }
+  ];
+
+  var DEFAULT_FALLBACK_IMG = 'https://trickbd.com/wp-content/uploads/2025/09/07/img-to-url-.png';
+
+  function getProgressKey(id) {
+    return 'unlock_progress_' + id;
+  }
+
+  function loadProgress(id) {
+    try {
+      var d = localStorage.getItem(getProgressKey(id));
+      return d ? JSON.parse(d) : { count: 0, unlocked: false };
+    } catch (e) {
+      return { count: 0, unlocked: false };
+    }
+  }
+
+  function saveProgress(id, state) {
+    try {
+      localStorage.setItem(getProgressKey(id), JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  var toastTimer = null;
+  function showToast(msg, type) {
+    type = type || 'info';
+    var el = document.getElementById('buc-toast');
+    if (!el) return;
+    el.className = 'buc-toast ' + type + ' show';
+    el.innerText = msg;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() {
+      el.className = 'buc-toast ' + type;
+    }, 3800);
+  }
+
+  function handleDownloadClick(e, fileId) {
+    var state = loadProgress(fileId);
+    if (!state.unlocked) {
+      if (e) e.preventDefault();
+      showToast('Please watch all required ads to unlock download.', 'warn');
+      return false;
+    }
+    return true;
+  }
+
+  function incrementAdCount(fileId, amount, source) {
+    amount = amount || 1;
+    var file = null;
+    for (var i = 0; i < FILES_DATA.length; i++) {
+      if (FILES_DATA[i].id === fileId) {
+        file = FILES_DATA[i];
+        break;
+      }
+    }
+    if (!file) return;
+    var cur = loadProgress(fileId);
+    var newCount = (cur.count || 0) + amount;
+    var isUnlocked = newCount >= file.requiredAds;
+    var nextState = { count: isUnlocked ? file.requiredAds : newCount, unlocked: isUnlocked || cur.unlocked };
+    saveProgress(fileId, nextState);
     renderFiles();
-  </script>
-</body>
-</html>
+    if (isUnlocked && !cur.unlocked) {
+      showToast('Congratulations! "' + file.title + '" is now unlocked for download!', 'success');
+    } else {
+      showToast('+1 Ad counted! (' + nextState.count + '/' + file.requiredAds + ')', 'info');
+    }
+  }
+
+  // Exact Monetag Rewarded Popup logic
+  function handleWatchAd(fileId) {
+    var file = null;
+    for (var i = 0; i < FILES_DATA.length; i++) {
+      if (FILES_DATA[i].id === fileId) {
+        file = FILES_DATA[i];
+        break;
+      }
+    }
+    if (!file) return;
+    var prog = loadProgress(fileId);
+    if (prog.unlocked) {
+      showToast('This item is already unlocked!', 'info');
+      return;
+    }
+
+    if (typeof window.show_11999946 === 'function') {
+      showToast('Loading ad (Rewarded Popup)... Please wait.', 'info');
+      window.show_11999946('pop').then(function() {
+        // user watch ad till the end or close it in interstitial format
+        incrementAdCount(fileId, 1, 'Rewarded Pop 11999946');
+      }).catch(function(e) {
+        console.warn('Ad playback notice:', e);
+        openFallbackTimer(fileId, file.title);
+      });
+    } else {
+      openFallbackTimer(fileId, file.title);
+    }
+  }
+
+  var activeAdFileId = null;
+  var countdownTimer = null;
+  var secondsLeft = 10;
+
+  function openFallbackTimer(fileId, title) {
+    activeAdFileId = fileId;
+    secondsLeft = 10;
+    var nameEl = document.getElementById('buc-ad-filename');
+    if (nameEl) nameEl.innerText = title || 'Reward Ad';
+    var timerEl = document.getElementById('buc-timer-sec');
+    if (timerEl) timerEl.innerText = secondsLeft + 's';
+    var claimBtn = document.getElementById('buc-claim-reward-btn');
+    if (claimBtn) {
+      claimBtn.disabled = true;
+      claimBtn.style.opacity = '0.5';
+      claimBtn.style.cursor = 'not-allowed';
+    }
+    var modal = document.getElementById('buc-ad-modal');
+    if (modal) modal.classList.add('active');
+    clearInterval(countdownTimer);
+    countdownTimer = setInterval(function() {
+      secondsLeft--;
+      if (secondsLeft <= 0) {
+        clearInterval(countdownTimer);
+        if (timerEl) timerEl.innerText = 'Completed!';
+        if (claimBtn) {
+          claimBtn.disabled = false;
+          claimBtn.style.opacity = '1';
+          claimBtn.style.cursor = 'pointer';
+        }
+      } else {
+        if (timerEl) timerEl.innerText = secondsLeft + 's';
+      }
+    }, 1000);
+  }
+
+  function closeAdModal() {
+    clearInterval(countdownTimer);
+    var modal = document.getElementById('buc-ad-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function claimFallbackReward() {
+    if (activeAdFileId) {
+      var id = activeAdFileId;
+      closeAdModal();
+      incrementAdCount(id, 1, 'Timer Complete');
+    }
+  }
+
+  var currentSlide = 0;
+  function renderCarousel() {
+    var wrap = document.getElementById('buc-carousel-inner');
+    var dots = document.getElementById('buc-dots');
+    if (!wrap || !dots) return;
+    var slidesHtml = '';
+    var dotsHtml = '';
+    for (var i = 0; i < BANNERS_DATA.length; i++) {
+      var b = BANNERS_DATA[i];
+      slidesHtml += '<div class="buc-slide">' +
+        '<div class="buc-slide-img-wrap" onclick="openImgModal(\'' + b.img + '\')">' +
+          '<img src="' + b.img + '" class="buc-slide-img" onerror="this.src=\'' + DEFAULT_FALLBACK_IMG + '\'" alt="' + b.title + '" />' +
+        '</div>' +
+        '<div class="buc-slide-content">' +
+          '<span class="buc-tag">Featured</span>' +
+          '<h4 class="buc-slide-title">' + b.title + '</h4>' +
+          '<p class="buc-slide-desc">' + b.desc + '</p>' +
+          '<div class="buc-slide-btns">' +
+            '<a href="https://uplcm.com/4/12001378" target="_blank" rel="noopener noreferrer" class="buc-btn-gradient">&#9654; Watch Now</a>' +
+            '<button class="buc-btn-secondary" type="button" onclick="openImgModal(\'' + b.img + '\')">Preview</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+      dotsHtml += '<div class="buc-dot ' + (i === currentSlide ? 'active' : '') + '" onclick="goToSlide(' + i + ')"></div>';
+    }
+    wrap.innerHTML = slidesHtml;
+    dots.innerHTML = dotsHtml;
+  }
+
+  function goToSlide(idx) {
+    currentSlide = idx;
+    var wrap = document.getElementById('buc-carousel-inner');
+    if (wrap) wrap.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+    var dots = document.querySelectorAll('.buc-dot');
+    for (var i = 0; i < dots.length; i++) {
+      dots[i].classList.toggle('active', i === currentSlide);
+    }
+  }
+
+  setInterval(function() {
+    currentSlide = (currentSlide + 1) % BANNERS_DATA.length;
+    goToSlide(currentSlide);
+  }, 4500);
+
+  function renderFiles() {
+    var grid = document.getElementById('buc-grid');
+    var searchEl = document.getElementById('buc-search-input');
+    var query = searchEl ? (searchEl.value || '').trim().toLowerCase() : '';
+    if (!grid) return;
+
+    var filtered = [];
+    for (var i = 0; i < FILES_DATA.length; i++) {
+      var f = FILES_DATA[i];
+      if (!query || f.title.toLowerCase().indexOf(query) !== -1 || f.desc.toLowerCase().indexOf(query) !== -1) {
+        filtered.push(f);
+      }
+    }
+
+    var countBadge = document.getElementById('buc-item-count');
+    if (countBadge) countBadge.innerText = filtered.length + ' items';
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div style="grid-column:1/-1; padding:32px; text-align:center; color:#94a3b8; background:#fff; border-radius:12px;">No matching files found.</div>';
+      return;
+    }
+
+    var cardsHtml = '';
+    for (var j = 0; j < filtered.length; j++) {
+      var file = filtered[j];
+      var state = loadProgress(file.id);
+      var isUnlocked = !!state.unlocked;
+      var count = state.count || 0;
+      var percent = Math.min(100, Math.round((count / file.requiredAds) * 100));
+
+      cardsHtml += '<div class="buc-card">' +
+        '<div>' +
+          '<div class="buc-card-top">' +
+            '<div class="buc-card-thumb" onclick="openImgModal(\'' + file.img + '\')">' +
+              '<img src="' + file.img + '" onerror="this.src=\'' + DEFAULT_FALLBACK_IMG + '\'" alt="' + file.title + '" />' +
+              (isUnlocked ? '<div class="buc-unlocked-tick">&#10003;</div>' : '') +
+            '</div>' +
+            '<div class="buc-card-meta">' +
+              '<h4 class="buc-card-title">' + file.title + '</h4>' +
+              '<p class="buc-card-desc">' + file.desc + '</p>' +
+              '<div class="buc-progress-head">' +
+                '<span>' + (isUnlocked ? 'Unlocked &#10003;' : 'Locked') + '</span>' +
+                '<span>' + count + ' / ' + file.requiredAds + '</span>' +
+              '</div>' +
+              '<div class="buc-progress-bar-bg">' +
+                '<div class="buc-progress-bar-fill ' + (isUnlocked ? 'unlocked' : '') + '" style="width:' + percent + '%"></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="buc-card-actions">' +
+          '<button class="buc-watch-btn ' + (isUnlocked ? 'done' : '') + '" type="button" onclick="handleWatchAd(\'' + file.id + '\')" ' + (isUnlocked ? 'disabled="disabled"' : '') + '>' +
+            (isUnlocked ? '&#10003; Unlocked' : '&#10024; Watch Ad (+1)') +
+          '</button>' +
+          '<button class="buc-action-sm" type="button" onclick="openImgModal(\'' + file.img + '\')">Image</button>' +
+          '<a href="https://uplcm.com/4/12001378" target="_blank" rel="noopener noreferrer" class="buc-action-sm">&#9654; Watch Now</a>' +
+          '<a href="' + (isUnlocked ? file.downloadUrl : '#') + '" ' +
+             'target="' + (isUnlocked ? '_blank' : '_self') + '" ' +
+             'rel="noopener noreferrer" ' +
+             'class="buc-dl-btn ' + (isUnlocked ? 'ready' : 'locked') + '" ' +
+             'onclick="return handleDownloadClick(event, \'' + file.id + '\')">' +
+             '&#11015; Download' +
+          '</a>' +
+        '</div>' +
+      '</div>';
+    }
+    grid.innerHTML = cardsHtml;
+  }
+
+  function openImgModal(src) {
+    var img = document.getElementById('buc-modal-img');
+    if (img) img.src = src || DEFAULT_FALLBACK_IMG;
+    var modal = document.getElementById('buc-img-modal');
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeImgModal() {
+    var modal = document.getElementById('buc-img-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  var searchEl = document.getElementById('buc-search-input');
+  if (searchEl) searchEl.addEventListener('input', renderFiles);
+
+  var resetBtn = document.getElementById('buc-reset-btn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+      if (confirm('Reset all unlock progress?')) {
+        for (var i = 0; i < FILES_DATA.length; i++) {
+          localStorage.removeItem(getProgressKey(FILES_DATA[i].id));
+        }
+        renderFiles();
+        showToast('All progress reset successfully.', 'info');
+      }
+    });
+  }
+
+  // Initialize immediately and on DOM load
+  function initAll() {
+    renderCarousel();
+    renderFiles();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
+</script>
